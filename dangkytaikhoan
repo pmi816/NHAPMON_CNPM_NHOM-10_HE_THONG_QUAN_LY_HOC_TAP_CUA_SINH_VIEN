@@ -1,0 +1,81 @@
+import re
+import json
+import os
+
+STUDENT_FILE = "students.json"
+
+# ----------------------------------------
+# Hàm kiểm tra email hợp lệ
+# ----------------------------------------
+def valid_email(email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, email)
+
+# ----------------------------------------
+# Hàm kiểm tra mật khẩu mạnh
+# Yêu cầu: ≥ 6 ký tự
+# ----------------------------------------
+def valid_password(password):
+    return len(password) >= 6
+
+# ----------------------------------------
+# Tải dữ liệu sinh viên
+# ----------------------------------------
+def load_students():
+    if not os.path.exists(STUDENT_FILE):
+        return {}
+    with open(STUDENT_FILE, "r") as f:
+        return json.load(f)
+
+# ----------------------------------------
+# Lưu dữ liệu sinh viên
+# ----------------------------------------
+def save_students(data):
+    with open(STUDENT_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+# ----------------------------------------
+# Hàm đăng ký tài khoản
+# ----------------------------------------
+def register_student():
+    print("===== ĐĂNG KÝ TÀI KHOẢN SINH VIÊN =====")
+
+    masv = input("Nhập mã sinh viên: ").strip()
+    hoten = input("Nhập họ tên: ").strip()
+    email = input("Nhập email: ").strip()
+    password = input("Nhập mật khẩu: ").strip()
+
+    # Kiểm tra rỗng
+    if not masv or not hoten or not email or not password:
+        print("❌ Không được bỏ trống thông tin!")
+        return
+
+    # Kiểm tra email
+    if not valid_email(email):
+        print("❌ Email không hợp lệ!")
+        return
+
+    # Kiểm tra mật khẩu
+    if not valid_password(password):
+        print("❌ Mật khẩu phải từ 6 ký tự trở lên!")
+        return
+
+    students = load_students()
+
+    # Kiểm tra trùng mã sinh viên
+    if masv in students:
+        print("❌ Mã sinh viên đã tồn tại!")
+        return
+
+    # Lưu dữ liệu
+    students[masv] = {
+        "hoten": hoten,
+        "email": email,
+        "password": password  # Thực tế nên mã hóa mật khẩu!
+    }
+
+    save_students(students)
+
+    print("✅ Đăng ký thành công!")
+
+register_student()
