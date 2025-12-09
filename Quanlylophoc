@@ -1,0 +1,164 @@
+
+# Cấu trúc: {ma_lop: {'ten': ten_lop, 'mo_ta': mo_ta_lop, 'sinh_vien': [ds_sinh_vien]}}
+ds_lop_hoc = {}
+
+# --- 1. Tạo lớp học mới ---
+def tao_lop_hoc_moi():
+    print("\n--- 1. Tạo lớp học mới ---")
+    ma_lop = input("Nhập mã lớp (duy nhất): ").upper()
+    
+    if ma_lop in ds_lop_hoc:
+        print(f"⚠️ Lỗi: Mã lớp '{ma_lop}' đã tồn tại.")
+        return
+
+    ten_lop = input("Nhập tên lớp: ")
+    mo_ta_lop = input("Nhập mô tả lớp: ")
+    
+    # Khởi tạo lớp học với danh sách sinh viên trống
+    ds_lop_hoc[ma_lop] = {
+        'ten': ten_lop,
+        'mo_ta': mo_ta_lop,
+        'sinh_vien': [] 
+    }
+    print(f"✅ Đã tạo lớp học **{ten_lop}** (Mã: {ma_lop}) thành công.")
+
+# --- 2. Cập nhật thông tin lớp học (Tên lớp, mô tả, mã lớp) ---
+def cap_nhat_thong_tin_lop_hoc():
+    print("\n--- 2. Cập nhật thông tin lớp học ---")
+    ma_lop = input("Nhập mã lớp cần cập nhật: ").upper()
+    
+    if ma_lop not in ds_lop_hoc:
+        print(f"⚠️ Lỗi: Không tìm thấy lớp học với mã '{ma_lop}'.")
+        return
+
+    lop_hoc = ds_lop_hoc[ma_lop]
+    
+    # Cập nhật Tên lớp
+    ten_moi = input(f"Cập nhật tên lớp (hiện tại: {lop_hoc['ten']}) [Bỏ qua nếu để trống]: ")
+    if ten_moi:
+        lop_hoc['ten'] = ten_moi
+        print("✅ Đã cập nhật Tên lớp.")
+
+    # Cập nhật Mô tả
+    mo_ta_moi = input(f"Cập nhật mô tả (hiện tại: {lop_hoc['mo_ta']}) [Bỏ qua nếu để trống]: ")
+    if mo_ta_moi:
+        lop_hoc['mo_ta'] = mo_ta_moi
+        print("✅ Đã cập nhật Mô tả.")
+        
+    # Cập nhật Mã lớp (phức tạp hơn, cần tạo khóa mới và xóa khóa cũ)
+    ma_moi = input(f"Cập nhật Mã lớp (hiện tại: {ma_lop}) [Bỏ qua nếu để trống]: ").upper()
+    if ma_moi and ma_moi != ma_lop:
+        if ma_moi in ds_lop_hoc:
+            print(f"⚠️ Lỗi: Mã lớp mới '{ma_moi}' đã tồn tại.")
+        else:
+            # Tạo bản sao của dữ liệu lớp học
+            ds_lop_hoc[ma_moi] = ds_lop_hoc.pop(ma_lop) 
+            print(f"✅ Đã cập nhật Mã lớp thành công: **{ma_lop}** -> **{ma_moi}**.")
+            ma_lop = ma_moi # Cập nhật mã lớp để tránh nhầm lẫn
+
+# --- 3. Xóa lớp học ---
+def xoa_lop_hoc():
+    print("\n--- 3. Xóa lớp học ---")
+    ma_lop = input("Nhập mã lớp cần xóa: ").upper()
+    
+    if ma_lop not in ds_lop_hoc:
+        print(f"⚠️ Lỗi: Không tìm thấy lớp học với mã '{ma_lop}'.")
+        return
+
+    xac_nhan = input(f"Bạn có chắc muốn xóa lớp '{ds_lop_hoc[ma_lop]['ten']}' (Mã: {ma_lop})? (y/n): ").lower()
+    
+    if xac_nhan == 'y':
+        del ds_lop_hoc[ma_lop]
+        print(f"✅ Đã xóa lớp học **{ma_lop}** thành công.")
+    else:
+        print("Huỷ thao tác xóa lớp.")
+
+# --- 4. Thêm / Xóa sinh viên khỏi lớp ---
+def quan_ly_sinh_vien():
+    print("\n--- 4. Thêm / Xóa sinh viên khỏi lớp ---")
+    ma_lop = input("Nhập mã lớp cần quản lý sinh viên: ").upper()
+    
+    if ma_lop not in ds_lop_hoc:
+        print(f"⚠️ Lỗi: Không tìm thấy lớp học với mã '{ma_lop}'.")
+        return
+
+    lop_hien_tai = ds_lop_hoc[ma_lop]
+    print(f"\nQuản lý sinh viên cho lớp: **{lop_hien_tai['ten']}** (Mã: {ma_lop})")
+    
+    while True:
+        print("\n* Danh sách sinh viên hiện tại: ", lop_hien_tai['sinh_vien'])
+        print("  a: Thêm sinh viên")
+        print("  r: Xóa sinh viên")
+        print("  q: Quay lại menu chính")
+        
+        chon = input("Chọn hành động: ").lower()
+
+        if chon == 'a':
+            ten_sv = input("Nhập tên sinh viên muốn thêm: ")
+            if ten_sv not in lop_hien_tai['sinh_vien']:
+                lop_hien_tai['sinh_vien'].append(ten_sv)
+                print(f"✅ Đã thêm sinh viên **{ten_sv}** vào lớp.")
+            else:
+                print(f"⚠️ Sinh viên **{ten_sv}** đã có trong lớp.")
+                
+        elif chon == 'r':
+            ten_sv = input("Nhập tên sinh viên muốn xóa: ")
+            if ten_sv in lop_hien_tai['sinh_vien']:
+                lop_hien_tai['sinh_vien'].remove(ten_sv)
+                print(f"✅ Đã xóa sinh viên **{ten_sv}** khỏi lớp.")
+            else:
+                print(f"⚠️ Lỗi: Không tìm thấy sinh viên **{ten_sv}** trong lớp.")
+                
+        elif chon == 'q':
+            break
+            
+        else:
+            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
+
+# --- Hàm hiển thị tất cả lớp học (hữu ích cho việc kiểm tra) ---
+def hien_thi_lop_hoc():
+    print("\n*** DANH SÁCH TẤT CẢ LỚP HỌC ***")
+    if not ds_lop_hoc:
+        print("Không có lớp học nào.")
+        return
+        
+    for ma, lop in ds_lop_hoc.items():
+        print(f"\n📋 Mã: **{ma}**")
+        print(f"   Tên: {lop['ten']}")
+        print(f"   Mô tả: {lop['mo_ta']}")
+        print(f"   SV: {len(lop['sinh_vien'])} người ({', '.join(lop['sinh_vien'])})")
+        
+# --- Menu chính ---
+def main():
+    while True:
+        print("\n==============================")
+        print("🚀 HỆ THỐNG QUẢN LÝ LỚP HỌC")
+        print("==============================")
+        print("1. Tạo lớp học mới")
+        print("2. Cập nhật thông tin lớp học")
+        print("3. Xóa lớp học")
+        print("4. Thêm / Xóa sinh viên khỏi lớp")
+        print("5. Hiển thị tất cả lớp học (Kiểm tra)")
+        print("0. Thoát")
+        
+        lua_chon = input("Nhập lựa chọn của bạn (0-5): ")
+        
+        if lua_chon == '1':
+            tao_lop_hoc_moi()
+        elif lua_chon == '2':
+            cap_nhat_thong_tin_lop_hoc()
+        elif lua_chon == '3':
+            xoa_lop_hoc()
+        elif lua_chon == '4':
+            quan_ly_sinh_vien()
+        elif lua_chon == '5':
+            hien_thi_lop_hoc()
+        elif lua_chon == '0':
+            print("👋 Đã thoát chương trình quản lý. Tạm biệt!")
+            break
+        else:
+            print("Lựa chọn không hợp lệ. Vui lòng chọn từ 0 đến 5.")
+
+# Chạy chương trình
+if __name__ == "__main__":
+    main()
