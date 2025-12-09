@@ -1,0 +1,116 @@
+import os
+import secrets
+import bcrypt
+import smtplib
+from email.message import EmailMessage
+from flask import Flask, request, jsonify
+from flask_migrate import Migrate
+from models import db, User
+from dotenv import load_dotenv
+
+load_dotenv()
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
+migrate = Migrate(app, db)
+
+# ------------ GỬI EMAIL XÁC THỰC -------------
+def send_verification_email(to_email, fullname, token):
+    msg = EmailMessage()
+    msg["Subject"] = "Xác thực tài khoản"
+    msg["From"] = "noreply@example.com"
+    msg["To"] = to_email
+
+    verify_link = f"{os.getenv('APP_BASE_URL')}/verify-email?token={token}"
+
+    msg.set_content(
+        f"Xin chào {fullname},\nClick để xác thực: {verify_link}"
+    )
+
+    # dùng Mailtrap
+    with smtplib.SMTP(os.getenv("MAIL_SERVER"), int(os.getenv("MAIL_PORT"))) as server:
+        server.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
+        server.send_message(msg)
+
+
+# ------------ API: ĐĂNG KÝ -------------------
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.json
+    fullname = data.get("fullname")
+    email = data.get("email")
+    phone = data.get("phone")
+    password = data.get("password")
+
+    if not fullname or not password:
+        return jsonify({"message": "fullname và password là bắt buộc"}), 400
+
+    if not email and not phone:
+        return jsonify({"message": "Cần cung cấp email hoặc phone"}), 400
+
+    # kiểm tra trùng email
+    if email and User.query.filter_by(email=email).first():
+        return jsonify({"message": "Email đã tồn tại"}), 409
+
+    # kiểm tra trùng phone
+    if phone and User.query.filter_by(phone=phone).first():
+        return jsonify({"message": "SĐT đã tồn tại"}), 409
+
+    # băm mật khẩu
+    password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+    # token xác thực email
+    verify_token = secrets.token_hex(20)
+
+    # tạo user
+    user = User(
+        fullname=fullname,
+        email=email,
+        phone=phone,
+        password_hash=password_hash,
+        role="student",
+        verify_token=verify_token,
+        is_verified=False
+    )
+
+    db.session.add(user)
+    db.session.commit()
+
+    # gửi email (nếu có)
+    if email:
+        try:
+            send_verification_email(email, fullname, verify_token)
+        except Exception as e:
+            print("Lỗi gửi email:", e)
+
+    return jsonify({
+        "message": "Đăng ký thành công. Kiểm tra email để xác thực.",
+        "user_id": user.id
+    }), 201
+
+
+# ------------ API: XÁC THỰC EMAIL -------------------
+@app.route("/verify-email")
+def verify_email():
+    token = request.args.get("token")
+    if not token:
+        return "Thiếu token", 400
+
+    user = User.query.filter_by(verify_token=token).first()
+    if not user:
+        return "Token không hợp lệ", 400
+
+    user.is_verified = True
+    user.verify_token = None
+    db.session.commit()
+
+    return "Xác thực thành công. Bạn có thể đăng nhập."
+
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
