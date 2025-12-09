@@ -1,0 +1,58 @@
+users = []   # nơi lưu tất cả tài khoản trong RAM (bạn có thể thay bằng file JSON)
+
+def email_exists(email):
+    """Kiểm tra email đã tồn tại hay chưa"""
+    for u in users:
+        if u["email"].lower() == email.lower():
+            return True
+    return False
+
+
+def phone_exists(phone):
+    """Kiểm tra số điện thoại đã tồn tại hay chưa"""
+    for u in users:
+        if u["phone"] == phone:
+            return True
+    return False
+
+
+def create_student_account(name, email, phone, password):
+    """Hàm tạo tài khoản mặc định quyền sinh viên"""
+    
+    # Kiểm tra email
+    if email_exists(email):
+        print("❌ Email đã tồn tại, không thể đăng ký!")
+        return None
+    
+    # Kiểm tra số điện thoại
+    if phone_exists(phone):
+        print("❌ Số điện thoại đã tồn tại, không thể đăng ký!")
+        return None
+
+    # Tạo user mới
+    new_user = {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "password": password,
+        "role": "student"   # mặc định quyền sinh viên
+    }
+
+    users.append(new_user)
+    print("✅ Tạo tài khoản sinh viên thành công!")
+    return new_user
+
+
+# -------- Test chương trình --------
+print("=== ĐĂNG KÝ TÀI KHOẢN SINH VIÊN ===")
+
+name = input("Họ tên: ")
+email = input("Email: ")
+phone = input("Số điện thoại: ")
+password = input("Mật khẩu: ")
+
+user = create_student_account(name, email, phone, password)
+
+if user:
+    print("\nThông tin tài khoản mới:")
+    print(user)
