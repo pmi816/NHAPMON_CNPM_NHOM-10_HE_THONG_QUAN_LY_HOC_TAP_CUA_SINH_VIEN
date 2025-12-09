@@ -1,0 +1,36 @@
+from flask import Flask, session, redirect, url_for, render_template, request
+
+app = Flask(__name__)
+app.secret_key = "secret_demo_key"
+
+# Trang chính (yêu cầu đã login)
+@app.route("/home")
+def home():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    return render_template("home.html", user=session["user"])
+
+# Trang đăng nhập demo
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        session["user"] = request.form["username"]
+        return redirect(url_for("home"))
+    return render_template("login.html")
+
+# Trang xác nhận đăng xuất
+@app.route("/logout_confirm")
+def logout_confirm():
+    return render_template("logout_confirm.html")
+
+# Xử lý đăng xuất
+@app.route("/logout")
+def logout():
+    # Xóa session/token hiện tại
+    session.pop("user", None)
+
+    # Chuyển về trang đăng nhập
+    return redirect(url_for("login"))
+
+if __name__ == "__main__":
+    app.run(debug=True)
