@@ -1,1 +1,2 @@
-
+# NHAPMON_CNPM_NHOM-10_HE_THONG_QUAN_LY_HOC_TAP_CUA_SINH_VIEN
+Xây dựng một website giúp sinh viên quản lý lịch học, bài tập và nhắc nhở hạn nộp. Sản phẩm hướng tới sinh viên đại học, hỗ trợ họ sắp xếp công việc học tập khoa học hơn. Nhóm sẽ phát triển các chức năng cơ bản như: đăng nhập, tạo danh sách môn học, thêm – sửa – xóa nhiệm vụ, và đánh dấu hoàn thành
