@@ -1,0 +1,45 @@
+import smtplib
+import ssl
+from email.message import EmailMessage
+
+def send_verification_email(to_email, verify_code):
+    # Thông tin email gửi đi
+    from_email = "youremail@gmail.com"     # Gmail của bạn
+    app_password = "your_app_password"      # Mật khẩu ứng dụng Gmail
+
+    subject = "Xác thực tài khoản sinh viên"
+    body = f"""
+    Xin chào,
+
+    Đây là mã xác thực tài khoản của bạn: {verify_code}
+
+    Nhập mã này vào hệ thống để kích hoạt tài khoản.
+
+    Trân trọng.
+    """
+
+    # Tạo email
+    msg = EmailMessage()
+    msg["From"] = from_email
+    msg["To"] = to_email
+    msg["Subject"] = subject
+    msg.set_content(body)
+
+    # Gửi email
+    context = ssl.create_default_context()
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
+            smtp.login(from_email, app_password)
+            smtp.send_message(msg)
+            print("📨 Email xác thực đã được gửi thành công!")
+
+    except Exception as e:
+        print("❌ Gửi email thất bại:", e)
+
+
+# --------- Chạy thử ----------
+email = input("Nhập email người nhận: ")
+code = "123456"  # Mã xác thực – bạn có thể random
+
+send_verification_email(email, code)
