@@ -48,10 +48,3 @@ def login(email, password):
     return f"❌ Sai mật khẩu! Bạn đã nhập sai {user['failed_attempts']} lần."
 
 
-# ===========================
-# Ví dụ chạy thử
-# ===========================
-
-print(login("user@gmail.com", "123456"))        # đúng
-print(login("user@gmail.com", "sai"))           # sai
-print(login("user@gmail.com", "sai"))           # sai tiếp
