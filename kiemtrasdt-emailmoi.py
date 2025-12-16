@@ -1,16 +1,10 @@
 import re
 
-# -----------------------------
-# Kiểm tra định dạng email
-# -----------------------------
 def is_valid_email(email: str) -> bool:
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     return re.match(pattern, email) is not None
 
 
-# -----------------------------
-# Kiểm tra trùng email
-# -----------------------------
 def is_duplicate_email(new_email: str, students: list) -> bool:
     for s in students:
         if s.get("email") == new_email:
@@ -18,9 +12,6 @@ def is_duplicate_email(new_email: str, students: list) -> bool:
     return False
 
 
-# -----------------------------
-# Kiểm tra trùng số điện thoại
-# -----------------------------
 def is_duplicate_phone(new_phone: str, students: list) -> bool:
     for s in students:
         if s.get("phone") == new_phone:
@@ -28,10 +19,6 @@ def is_duplicate_phone(new_phone: str, students: list) -> bool:
     return False
 
 
-# -----------------------------
-# Kiểm tra email & số điện thoại khi cập nhật
-# (bỏ qua chính sinh viên đang cập nhật)
-# -----------------------------
 def check_duplicate_on_update(student_id: str, new_email: str, new_phone: str, students: list) -> bool:
     for s in students:
         if s.get("id") != student_id:
