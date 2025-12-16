@@ -1,30 +1,40 @@
-def is_email_duplicate(new_email, students, current_id=None):
-    for student in students:
-        # Bỏ qua chính sinh viên đang cập nhật
-        if student["student_id"] != current_id:
-            if student["email"] == new_email:
+import re
+
+# -----------------------------
+# Kiểm tra định dạng email
+# -----------------------------
+def is_valid_email(email: str) -> bool:
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, email) is not None
+
+
+# -----------------------------
+# Kiểm tra trùng email
+# -----------------------------
+def is_duplicate_email(new_email: str, students: list) -> bool:
+    for s in students:
+        if s.get("email") == new_email:
+            return True
+    return False
+
+
+# -----------------------------
+# Kiểm tra trùng số điện thoại
+# -----------------------------
+def is_duplicate_phone(new_phone: str, students: list) -> bool:
+    for s in students:
+        if s.get("phone") == new_phone:
+            return True
+    return False
+
+
+# -----------------------------
+# Kiểm tra email & số điện thoại khi cập nhật
+# (bỏ qua chính sinh viên đang cập nhật)
+# -----------------------------
+def check_duplicate_on_update(student_id: str, new_email: str, new_phone: str, students: list) -> bool:
+    for s in students:
+        if s.get("id") != student_id:
+            if s.get("email") == new_email or s.get("phone") == new_phone:
                 return True
     return False
-def is_phone_duplicate(new_phone, students, current_id=None):
-    for student in students:
-        if student["student_id"] != current_id:
-            if student["phone"] == new_phone:
-                return True
-    return False
-def update_personal_info(student_id, new_email, new_phone, students):
-    # Kiểm tra trùng email
-    if is_email_duplicate(new_email, students, student_id):
-        return "Email đã tồn tại trong hệ thống!"
-
-    # Kiểm tra trùng số điện thoại
-    if is_phone_duplicate(new_phone, students, student_id):
-        return "Số điện thoại đã tồn tại trong hệ thống!"
-
-    # Cập nhật nếu hợp lệ
-    for student in students:
-        if student["student_id"] == student_id:
-            student["email"] = new_email
-            student["phone"] = new_phone
-            return "Cập nhật thông tin thành công!"
-
-    return "Không tìm thấy sinh viên!"
