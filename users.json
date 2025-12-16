@@ -1,0 +1,16 @@
+{
+  "admin@example.com": {
+    "password": "admin123",
+    "role": "admin",
+    "failed_attempts": 0,
+    "locked_until": null,
+    "last_login": null
+  },
+  "user@example.com": {
+    "password": "user123",
+    "role": "user",
+    "failed_attempts": 0,
+    "locked_until": null,
+    "last_login": null
+  }
+}

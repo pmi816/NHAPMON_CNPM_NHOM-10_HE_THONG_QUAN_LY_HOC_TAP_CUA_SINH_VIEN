@@ -1,0 +1,18 @@
+<h2>Bạn có chắc chắn muốn đăng xuất?</h2>
+
+<form action="/logout" method="get">
+    <button type="submit">Đồng ý</button>
+</form>
+
+<form action="/home" method="get">
+    <button type="submit">Hủy</button>
+</form>
+
+<h1>Xin chào {{ user }}</h1>
+<a href="/logout_confirm">Đăng xuất</a>
+
+<h2>Đăng nhập</h2>
+<form method="post">
+    <input type="text" name="username" placeholder="Tên đăng nhập" required />
+    <button type="submit">Đăng nhập</button>
+</form>
