@@ -47,7 +47,6 @@ class LoginSystem:
             return "Chưa đăng nhập"
         
         try:
-            # Thử parse theo ISO format
             if isinstance(last_login, str):
                 last_login = last_login.replace('Z', '+00:00')
                 dt = datetime.fromisoformat(last_login)
@@ -55,7 +54,6 @@ class LoginSystem:
             else:
                 return "Chưa đăng nhập"
         except (ValueError, TypeError):
-            # Nếu không parse được, trả về nguyên bản
             return "Chưa đăng nhập"
     
     def is_account_locked(self, email):
@@ -69,7 +67,6 @@ class LoginSystem:
                     return f"Tài khoản bị khóa đến {lock_time.strftime('%H:%M:%S')} " \
                            f"(Còn lại: {int(remaining.total_seconds()//60)} phút {int(remaining.seconds%60)} giây)"
                 else:
-                    # Hết thời gian khóa
                     user["locked_until"] = None
                     user["failed_attempts"] = 0
                     self.save_users()
