@@ -1,0 +1,32 @@
+import json
+import os
+
+USER_FILE = "users.json"
+
+# ---------------------------
+# Lưu thông tin người dùng đã cập nhật
+# ---------------------------
+def save_updated_user(user_id, updated_data):
+    # Kiểm tra file dữ liệu
+    if not os.path.exists(USER_FILE):
+        print("❌ Không tìm thấy file dữ liệu!")
+        return
+
+    # Đọc dữ liệu
+    with open(USER_FILE, "r", encoding="utf-8") as f:
+        users = json.load(f)
+
+    # Cập nhật thông tin
+    for user in users:
+        if user["id"] == user_id:
+            for key, value in updated_data.items():
+                user[key] = value
+
+            # Lưu lại vào hệ thống
+            with open(USER_FILE, "w", encoding="utf-8") as f:
+                json.dump(users, f, indent=4, ensure_ascii=False)
+
+            print("✅ Lưu thông tin cập nhật vào hệ thống thành công!")
+            return
+
+    print("❌ Không tìm thấy người dùng!")
