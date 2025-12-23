@@ -1,0 +1,32 @@
+# Giả lập cơ sở dữ liệu tài khoản
+accounts_db = [
+    {
+        "full_name": "Admin Root",
+        "email": "admin@system.com",
+        "password": "admin123",
+        "role": "admin"
+    }
+]
+def input_account_info():
+    full_name = input("Nhập họ tên: ")
+    email = input("Nhập email: ")
+    password = input("Nhập mật khẩu: ")
+    return full_name, email, password
+def choose_account_role():
+    print("Chọn loại tài khoản:")
+    print("1. Giảng viên")
+    print("2. Admin")
+    choice = input("Nhập lựa chọn (1/2): ")
+
+    if choice == "1":
+        return "giang_vien"
+    elif choice == "2":
+        return "admin"
+    else:
+        print("❌ Lựa chọn không hợp lệ")
+        return None
+def is_email_exist(email):
+    for account in accounts_db:
+        if account["email"] == email:
+            return True
+    return False

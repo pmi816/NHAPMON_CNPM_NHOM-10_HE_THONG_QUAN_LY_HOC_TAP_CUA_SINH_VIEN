@@ -1,0 +1,52 @@
+# Danh sách lưu thông báo
+announcements = []
+from datetime import datetime
+from database import announcements
+
+# Thêm thông báo mới
+def them_thong_bao(tieu_de, noi_dung, doi_tuong):
+    thong_bao = {
+        "id": len(announcements) + 1,
+        "tieu_de": tieu_de,
+        "noi_dung": noi_dung,
+        "doi_tuong": doi_tuong,
+        "thoi_gian": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    announcements.append(thong_bao)
+    return thong_bao
+
+# Lấy danh sách thông báo
+def lay_danh_sach_thong_bao():
+    return announcements
+from flask import Flask, request, jsonify
+from models import them_thong_bao, lay_danh_sach_thong_bao
+
+app = Flask(__name__)
+
+# 👨‍🏫 Giảng viên đăng thông báo
+@app.route("/announcements", methods=["POST"])
+def dang_thong_bao():
+    du_lieu = request.json
+
+    if not du_lieu:
+        return jsonify({"loi": "Không có dữ liệu"}), 400
+
+    tieu_de = du_lieu.get("tieu_de")
+    noi_dung = du_lieu.get("noi_dung")
+    doi_tuong = du_lieu.get("doi_tuong")
+
+    if not tieu_de or not noi_dung or not doi_tuong:
+        return jsonify({"loi": "Thiếu thông tin"}), 400
+
+    thong_bao = them_thong_bao(tieu_de, noi_dung, doi_tuong)
+    return jsonify(thong_bao), 201
+
+
+# 👩‍🎓 Sinh viên xem thông báo
+@app.route("/announcements", methods=["GET"])
+def xem_thong_bao():
+    return jsonify(lay_danh_sach_thong_bao()), 200
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
