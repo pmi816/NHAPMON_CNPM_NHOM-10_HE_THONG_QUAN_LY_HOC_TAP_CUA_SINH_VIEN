@@ -49,4 +49,11 @@ def input_detail_info(role):
         return department, temp_password
     else:
         return None, None
+def verify_admin():
+    admin_password = input("Nhập mật khẩu admin để xác nhận: ")
+    for account in accounts_db:
+        if account["role"] == "admin" and account["password"] == admin_password:
+            return True
+    return False
+
 
