@@ -30,3 +30,23 @@ def is_email_exist(email):
         if account["email"] == email:
             return True
     return False
+def build_account(full_name, email, password, role, department=None):
+    account = {
+        "full_name": full_name,
+        "email": email,
+        "password": password,
+        "role": role
+    }
+
+    if role == "giang_vien":
+        account["department"] = department
+
+    return account
+def input_detail_info(role):
+    if role == "giang_vien":
+        department = input("Nhập khoa/phòng ban: ")
+        temp_password = "GV123456"   # mật khẩu tạm thời
+        return department, temp_password
+    else:
+        return None, None
+
