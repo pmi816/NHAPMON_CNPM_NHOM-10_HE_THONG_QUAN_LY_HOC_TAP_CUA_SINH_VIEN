@@ -37,18 +37,36 @@ class LoginSystem:
         with open(self.users_db, 'w', encoding='utf-8') as f:
             json.dump(self.users, f, indent=2, ensure_ascii=False)
     
+    def format_last_login(self, last_login):
+        """Định dạng thời gian đăng nhập cuối"""
+        if not last_login:
+            return "Chưa đăng nhập"
+        
+        # Kiểm tra nếu đã là chuỗi "Chưa đăng nhập"
+        if isinstance(last_login, str) and ("Chua dāng nhập" in last_login or "Chưa đăng nhập" in last_login):
+            return "Chưa đăng nhập"
+        
+        try:
+            if isinstance(last_login, str):
+                last_login = last_login.replace('Z', '+00:00')
+                dt = datetime.fromisoformat(last_login)
+                return dt.strftime('%d/%m/%Y %H:%M')
+            else:
+                return "Chưa đăng nhập"
+        except (ValueError, TypeError):
+            return "Chưa đăng nhập"
+    
     def is_account_locked(self, email):
         """Kiểm tra tài khoản có bị khóa không"""
         if email in self.users:
             user = self.users[email]
             if user["locked_until"]:
-                lock_time = datetime.fromisoformat(user["locked_until"])
+                lock_time = datetime.fromisoformat(user["locked_until"].replace('Z', '+00:00'))
                 if datetime.now() < lock_time:
                     remaining = lock_time - datetime.now()
                     return f"Tài khoản bị khóa đến {lock_time.strftime('%H:%M:%S')} " \
                            f"(Còn lại: {int(remaining.total_seconds()//60)} phút {int(remaining.seconds%60)} giây)"
                 else:
-                    # Hết thời gian khóa
                     user["locked_until"] = None
                     user["failed_attempts"] = 0
                     self.save_users()
@@ -137,15 +155,29 @@ class LoginSystem:
         """Hiển thị lịch sử đăng nhập (demo)"""
         print("\n📊 LỊCH SỬ ĐĂNG NHẬP (DEMO):")
         print("-"*40)
+        
         for email, data in self.users.items():
-            status = "✅ Hoạt động" if data["failed_attempts"] < 5 else "⛔ Tạm khóa"
-            last_login = data.get("last_login", "Chưa đăng nhập")
-            if last_login != "Chưa đăng nhập":
-                last_login = datetime.fromisoformat(last_login).strftime('%d/%m/%Y %H:%M')
+            # Kiểm tra trạng thái
+            if data["failed_attempts"] >= 5 and data["locked_until"]:
+                try:
+                    lock_time = datetime.fromisoformat(data["locked_until"].replace('Z', '+00:00'))
+                    if datetime.now() < lock_time:
+                        status = "⛔ Tạm khóa"
+                    else:
+                        status = "✅ Hoạt động"
+                except:
+                    status = "❓ Không xác định"
+            else:
+                status = "✅ Hoạt động"
+            
+            # Định dạng thời gian đăng nhập cuối
+            last_login = data.get("last_login")
+            formatted_last_login = self.format_last_login(last_login)
+            
             print(f"📧 {email}")
             print(f"   Vai trò: {data['role']}")
             print(f"   Trạng thái: {status}")
-            print(f"   Lần đăng nhập cuối: {last_login}")
+            print(f"   Lần đăng nhập cuối: {formatted_last_login}")
             print(f"   Số lần thử sai gần nhất: {data['failed_attempts']}")
             print()
     
