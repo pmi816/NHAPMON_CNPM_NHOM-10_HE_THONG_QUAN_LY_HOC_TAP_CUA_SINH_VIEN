@@ -25,3 +25,8 @@ def choose_account_role():
     else:
         print("❌ Lựa chọn không hợp lệ")
         return None
+def is_email_exist(email):
+    for account in accounts_db:
+        if account["email"] == email:
+            return True
+    return False
