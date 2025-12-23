@@ -55,5 +55,8 @@ def verify_admin():
         if account["role"] == "admin" and account["password"] == admin_password:
             return True
     return False
+def send_email(email, role):
+    print(f"📧 Gửi email thông báo tạo tài khoản {role} thành công tới {email}")
+
 
 
