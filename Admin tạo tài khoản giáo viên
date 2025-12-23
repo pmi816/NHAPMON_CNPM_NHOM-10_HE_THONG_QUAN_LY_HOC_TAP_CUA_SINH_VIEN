@@ -1,121 +1,27 @@
-# models.py
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+# Giả lập cơ sở dữ liệu tài khoản
+accounts_db = [
+    {
+        "full_name": "Admin Root",
+        "email": "admin@system.com",
+        "password": "admin123",
+        "role": "admin"
+    }
+]
+def input_account_info():
+    full_name = input("Nhập họ tên: ")
+    email = input("Nhập email: ")
+    password = input("Nhập mật khẩu: ")
+    return full_name, email, password
+def choose_account_role():
+    print("Chọn loại tài khoản:")
+    print("1. Giảng viên")
+    print("2. Admin")
+    choice = input("Nhập lựa chọn (1/2): ")
 
-Base = declarative_base()
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    full_name = Column(String)
-    email = Column(String, unique=True, index=True)
-    password = Column(String)
-    role = Column(String)   # "GIANG_VIEN" hoặc "ADMIN"
-    department = Column(String, nullable=True)
-    # database.py
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-DATABASE_URL = "sqlite:///./users.db"  # đổi sang MySQL nếu muốn
-
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-# schemas.py
-from pydantic import BaseModel, EmailStr
-from typing import Optional
-
-class CreateAccountRequest(BaseModel):
-    admin_email: EmailStr
-    admin_password: str
-
-    full_name: str
-    email: EmailStr
-    role: str           # "GIANG_VIEN" / "ADMIN"
-    department: Optional[str] = None
-# email_utils.py
-import smtplib
-from email.mime.text import MIMEText
-
-def send_email(to, subject, body):
-    sender = "YOUR_EMAIL@gmail.com"
-    app_password = "YOUR_APP_PASSWORD"   # google app password
-
-    msg = MIMEText(body)
-    msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = to
-
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(sender, app_password)
-        server.sendmail(sender, to, msg.as_string())
-# main.py
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-from database import SessionLocal, engine
-from models import Base, User
-from schemas import CreateAccountRequest
-from email_utils import send_email
-import random, string
-
-# Tạo bảng
-Base.metadata.create_all(bind=engine)
-
-app = FastAPI()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# dependency lấy session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-def verify_admin(db: Session, email: str, password: str):
-    admin = db.query(User).filter(User.email == email, User.role == "ADMIN").first()
-    if not admin:
-        raise HTTPException(status_code=401, detail="Admin không tồn tại")
-
-    if not pwd_context.verify(password, admin.password):
-        raise HTTPException(status_code=403, detail="Sai mật khẩu admin")
-@app.post("/admin/create-account")
-def create_account(req: CreateAccountRequest, db: Session = Depends(get_db)):
-
-    # 1. Xác minh admin
-    verify_admin(db, req.admin_email, req.admin_password)
-
-    # 2. Kiểm tra email trùng
-    exists = db.query(User).filter(User.email == req.email).first()
-    if exists:
-        raise HTTPException(status_code=400, detail="Email đã tồn tại")
-
-    # 3. Tạo mật khẩu tạm
-    temp_password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-    hashed_password = pwd_context.hash(temp_password)
-
-    # 4. Lưu vào database
-    new_user = User(
-        full_name=req.full_name,
-        email=req.email,
-        role=req.role,
-        department=req.department if req.role == "GIANG_VIEN" else None,
-        password=hashed_password
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    # 5. Gửi email
-    body = f"""
-Xin chào {req.full_name},
-
-Tài khoản của bạn đã được tạo thành công:
-
-Email: {req.email}
-Mật khẩu tạm thời: {temp_password}
-Vui lòng đăng nhập và đổi mật khẩu.
-"""
-    send_email(req.email, "Tài khoản mới", body)
-
-    return {"message": "Tạo tài khoản thành công & gửi email", "user_id": new_user.id}
+    if choice == "1":
+        return "giang_vien"
+    elif choice == "2":
+        return "admin"
+    else:
+        print("❌ Lựa chọn không hợp lệ")
+        return None
