@@ -21,6 +21,16 @@ class Assignment:
 
 # ====== DỮ LIỆU ======
 assignments = []
+notifications = []
+temp_assignment = None 
+#thiết lập thông báo tự động 
+def auto_notification(assignment):
+    message = (
+        f"Bài tập mới [{assignment.aid}] môn {assignment.subject} "
+        f"đã được đăng. Hạn nộp: {assignment.deadline}"
+    )
+    notifications.append(message)
+
 # ====== MENU GIẢNG VIÊN ======
 def lecturer_menu():
     while True:
@@ -57,12 +67,34 @@ def lecturer_menu():
             else:
                 temp_assignment["deadline"] = input("Hạn nộp (dd/mm/yyyy): ")
                 print("✅ Đã đặt hạn nộp")
-                # 3. Gán môn học
+    # 3. Gán môn học
         elif choice == "3":
             if not temp_assignment:
                 print("❌ Chưa nhập nội dung bài tập")
             else:
                 temp_assignment["subject"] = input("Tên môn học: ")
                 print("✅ Đã gán môn học")
+    # Lưu bài tập + TẠO THÔNG BÁO TỰ ĐỘNG
+        elif choice == "4":
+            if temp_assignment is None:
+                print("❌ Chưa có bài tập để lưu")
+            else:
+                assignment = Assignment(
+                    temp_assignment["aid"],
+                    temp_assignment["content"],
+                    temp_assignment["subject"],
+                    temp_assignment["deadline"]
+                )
+                assignments.append(assignment)
 
+                # 🔔 THIẾT LẬP THÔNG BÁO TỰ ĐỘNG
+                auto_notification(assignment)
+
+                temp_assignment = None
+                print(" Đã lưu bài tập và gửi thông báo tự động")
+
+        elif choice == "0":
+            break
+        else:
+            print("❌ Sai lựa chọn")
 
