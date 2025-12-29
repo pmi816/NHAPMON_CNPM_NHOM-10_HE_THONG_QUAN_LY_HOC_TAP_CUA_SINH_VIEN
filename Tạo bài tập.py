@@ -116,4 +116,18 @@ def student_menu():
                 for a in assignments:
                     print(a.display_for_student())
                     print("-" * 30)
+ # ====== SINH VIÊN XEM THÔNG BÁO TỰ ĐỘNG ======
+        elif choice == "2":
+            if not notifications:
+                print("❌ Không có thông báo")
+            else:
+                print("\n🔔 THÔNG BÁO")
+                for n in notifications:
+                    print("-", n)
+
+        elif choice == "0":
+            break
+        else:
+            print("❌ Sai lựa chọn")
+
 
