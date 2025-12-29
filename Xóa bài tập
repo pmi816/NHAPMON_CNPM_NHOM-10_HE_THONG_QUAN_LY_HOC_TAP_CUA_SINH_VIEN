@@ -1,0 +1,14 @@
+# module4/delete_assignment.py
+from module1.show_assignments import assignments
+
+def delete_assignment():
+    try:
+        aid = int(input("Nhập ID bài tập muốn xóa: "))
+        for a in assignments:
+            if a['id'] == aid:
+                assignments.remove(a)
+                print("Xóa bài tập thành công.")
+                return
+        print("Không tìm thấy bài tập.")
+    except ValueError:
+        print("ID phải là số.")
