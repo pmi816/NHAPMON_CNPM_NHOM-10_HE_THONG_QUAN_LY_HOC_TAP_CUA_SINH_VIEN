@@ -57,4 +57,3 @@ def lecturer_menu():
             else:
                 temp_assignment["deadline"] = input("Hạn nộp (dd/mm/yyyy): ")
                 print("✅ Đã đặt hạn nộp")
-
