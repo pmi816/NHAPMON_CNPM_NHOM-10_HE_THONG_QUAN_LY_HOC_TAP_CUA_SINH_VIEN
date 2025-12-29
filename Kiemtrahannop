@@ -1,0 +1,10 @@
+from datetime import datetime
+
+def kiem_tra_han_nop(han_nop):
+    hien_tai = datetime.now()
+    if hien_tai <= han_nop:
+        print("Bài còn trong hạn nộp.")
+        return True
+    else:
+        print("Đã quá hạn nộp!")
+        return False
