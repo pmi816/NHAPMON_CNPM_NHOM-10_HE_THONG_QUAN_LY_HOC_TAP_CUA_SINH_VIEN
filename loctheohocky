@@ -1,0 +1,30 @@
+import json
+import os
+
+KQHT_FILE = "ketquahoctap.json"
+
+def loc_ket_qua_theo_hoc_ky(ma_sinh_vien, hoc_ky):
+    if not os.path.exists(KQHT_FILE):
+        return "Không tìm thấy dữ liệu kết quả học tập."
+
+    with open(KQHT_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if ma_sinh_vien not in data:
+        return "Sinh viên không tồn tại."
+
+    danh_sach_mon = data[ma_sinh_vien].get("mon_hoc", [])
+
+    if not danh_sach_mon:
+        return "Chưa có dữ liệu môn học."
+
+    ket_qua_hoc_ky = []
+
+    for mon in danh_sach_mon:
+        if mon.get("hoc_ky") == hoc_ky:
+            ket_qua_hoc_ky.append(mon)
+
+    if not ket_qua_hoc_ky:
+        return "Không có kết quả học tập cho học kỳ này."
+
+    return ket_qua_hoc_ky
