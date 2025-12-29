@@ -97,4 +97,23 @@ def lecturer_menu():
             break
         else:
             print("❌ Sai lựa chọn")
+            # ====== MENU SINH VIÊN ======
+def student_menu():
+    while True:
+        print("\n--- SINH VIÊN ---")
+        print("1. Xem bài tập")
+        print("2. Xem thông báo")
+        print("0. Quay lại")
+
+        choice = input("Chọn: ")
+
+        # ====== HIỂN THỊ BÀI TẬP CHO SINH VIÊN ======
+        if choice == "1":
+            if not assignments:
+                print("❌ Chưa có bài tập")
+            else:
+                print("\n===== DANH SÁCH BÀI TẬP =====")
+                for a in assignments:
+                    print(a.display_for_student())
+                    print("-" * 30)
 
