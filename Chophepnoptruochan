@@ -1,0 +1,5 @@
+def cho_phep_nop_lai(truoc_han):
+    if truoc_han:
+        print("Cho phép nộp lại bài.")
+    else:
+        print("Không cho phép nộp lại.")
