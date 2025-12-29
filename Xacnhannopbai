@@ -1,0 +1,3 @@
+def xac_nhan_nop():
+    lua_chon = input("Bạn có chắc chắn muốn nộp bài không? (y/n): ")
+    return lua_chon.lower() == "y"
