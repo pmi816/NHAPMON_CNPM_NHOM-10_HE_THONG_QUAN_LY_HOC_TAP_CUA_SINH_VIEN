@@ -1,0 +1,11 @@
+# module1/show_assignments.py
+assignments = [
+    {"id": 1, "title": "Bài tập 1", "desc": "Mô tả bài 1", "deadline": "2025-12-31", "submitted": False},
+    {"id": 2, "title": "Bài tập 2", "desc": "Mô tả bài 2", "deadline": "2026-01-05", "submitted": True}
+]
+
+def show_assignments():
+    print("\n=== DANH SÁCH BÀI TẬP ===")
+    for a in assignments:
+        print(f"ID: {a['id']}, Tên: {a['title']}, Deadline: {a['deadline']}, Đã nộp: {a['submitted']}")
+    print()

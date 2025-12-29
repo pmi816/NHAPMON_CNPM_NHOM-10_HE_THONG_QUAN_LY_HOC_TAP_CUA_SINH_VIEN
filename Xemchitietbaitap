@@ -1,0 +1,13 @@
+# module2/view_assignment_detail.py
+from module1.show_assignments import assignments
+
+def view_assignment_detail():
+    try:
+        aid = int(input("Nhập ID bài tập muốn xem chi tiết: "))
+        for a in assignments:
+            if a['id'] == aid:
+                print(f"\nID: {a['id']}\nTên: {a['title']}\nMô tả: {a['desc']}\nDeadline: {a['deadline']}\nĐã nộp: {a['submitted']}\n")
+                return
+        print("Không tìm thấy bài tập.")
+    except ValueError:
+        print("ID phải là số.")
