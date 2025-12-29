@@ -1,0 +1,40 @@
+# Danh sách tài khoản (giả lập database)
+accounts = []
+
+def email_exists(email):
+    """Kiểm tra email đã tồn tại hay chưa"""
+    for acc in accounts:
+        if acc["email"] == email:
+            return True
+    return False
+
+def create_student_account(name, email, password):
+    """Tạo tài khoản mặc định quyền sinh viên"""
+    if email_exists(email):
+        return "❌ Email đã tồn tại, vui lòng dùng email khác!"
+
+    new_account = {
+        "id": len(accounts) + 1,
+        "name": name,
+        "email": email,
+        "password": password,
+        "role": "student"   # mặc định quyền sinh viên
+    }
+
+    accounts.append(new_account)
+    return "✅ Tạo tài khoản sinh viên thành công!"
+
+# ============================
+# Chạy thử chương trình
+# ============================
+
+name = input("Nhập họ tên: ")
+email = input("Nhập email: ")
+password = input("Nhập mật khẩu: ")
+
+result = create_student_account(name, email, password)
+print(result)
+
+print("\nDanh sách tài khoản hiện có:")
+for acc in accounts:
+    print(acc)
