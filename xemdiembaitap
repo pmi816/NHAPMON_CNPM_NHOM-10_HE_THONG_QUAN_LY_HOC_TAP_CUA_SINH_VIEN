@@ -8,9 +8,11 @@ def xem_diem_bai_tap(ma_sinh_vien):
         return "Không tìm thấy dữ liệu kết quả học tập."
     with open(KQHT_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
+
     if ma_sinh_vien not in data:
         return "Sinh viên không tồn tại."
     ket_qua = data[ma_sinh_vien]
+    
     if "bai_tap" not in ket_qua or len(ket_qua["bai_tap"]) == 0:
         return "Chưa có điểm bài tập."
     danh_sach_diem = []

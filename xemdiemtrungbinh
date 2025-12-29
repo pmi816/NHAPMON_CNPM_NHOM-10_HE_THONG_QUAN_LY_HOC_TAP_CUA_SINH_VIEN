@@ -1,0 +1,35 @@
+import json
+import os
+
+KQHT_FILE = "ketquahoctap.json"
+
+def xem_diem_trung_binh(ma_sinh_vien):
+    if not os.path.exists(KQHT_FILE):
+        return "Không tìm thấy dữ liệu kết quả học tập."
+
+    with open(KQHT_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if ma_sinh_vien not in data:
+        return "Sinh viên không tồn tại."
+
+    mon_hoc = data[ma_sinh_vien].get("mon_hoc", [])
+
+    if not mon_hoc:
+        return "Chưa có dữ liệu điểm môn học."
+
+    tong_diem = 0
+    so_mon = 0
+
+    for mon in mon_hoc:
+        diem = mon.get("diem")
+        if diem is not None:
+            tong_diem += diem
+            so_mon += 1
+
+    if so_mon == 0:
+        return "Chưa có môn nào được chấm điểm."
+
+    diem_trung_binh = round(tong_diem / so_mon, 2)
+
+    return diem_trung_binh
