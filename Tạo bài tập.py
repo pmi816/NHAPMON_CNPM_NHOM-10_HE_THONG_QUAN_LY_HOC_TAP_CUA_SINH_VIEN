@@ -57,3 +57,12 @@ def lecturer_menu():
             else:
                 temp_assignment["deadline"] = input("Hạn nộp (dd/mm/yyyy): ")
                 print("✅ Đã đặt hạn nộp")
+                # 3. Gán môn học
+        elif choice == "3":
+            if not temp_assignment:
+                print("❌ Chưa nhập nội dung bài tập")
+            else:
+                temp_assignment["subject"] = input("Tên môn học: ")
+                print("✅ Đã gán môn học")
+
+
