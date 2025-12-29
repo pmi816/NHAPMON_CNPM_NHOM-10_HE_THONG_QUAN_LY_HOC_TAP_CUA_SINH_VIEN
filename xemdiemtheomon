@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fake_db import grades
 
+
 app = FastAPI()
+
 
 @app.get("/student/{student_id}/grades")
 def view_student_grades(student_id: int, semester: str = None):
