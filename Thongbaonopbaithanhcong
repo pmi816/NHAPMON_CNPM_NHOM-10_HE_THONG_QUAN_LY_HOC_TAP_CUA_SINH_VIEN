@@ -1,0 +1,2 @@
+def thong_bao_thanh_cong():
+    print(" Nộp bài thành công! Hệ thống đã ghi nhận.")

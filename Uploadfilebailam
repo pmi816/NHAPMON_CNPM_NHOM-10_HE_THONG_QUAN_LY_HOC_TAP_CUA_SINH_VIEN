@@ -1,0 +1,7 @@
+def upload_file(ten_file):
+    if ten_file.endswith((".pdf", ".docx", ".zip")):
+        print(f"Upload thành công file: {ten_file}")
+        return True
+    else:
+        print("Định dạng file không hợp lệ!")
+        return False
