@@ -50,3 +50,11 @@ def lecturer_menu():
                 "attachment": None
             }
             print("✅ Đã nhập nội dung bài tập")
+        # 2. Đặt hạn nộp
+        elif choice == "2":
+            if not temp_assignment:
+                print("❌ Chưa nhập nội dung bài tập")
+            else:
+                temp_assignment["deadline"] = input("Hạn nộp (dd/mm/yyyy): ")
+                print("✅ Đã đặt hạn nộp")
+
