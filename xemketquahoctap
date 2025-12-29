@@ -16,7 +16,6 @@ def student_view_grades(student_id: int, semester: str = None):
     # TODO: Nếu có semester thì lọc theo học kỳ
     raise HTTPException(status_code=501, detail="Chưa triển khai nguồn dữ liệu")
 
-
 # =========================
 # SINH VIÊN – ĐIỂM TRUNG BÌNH
 # =========================
@@ -29,7 +28,6 @@ def student_average_score(student_id: int):
     # TODO: Tính điểm trung bình
     raise HTTPException(status_code=501, detail="Chưa triển khai nguồn dữ liệu")
 
-
 # ==================================================
 # GIẢNG VIÊN – XEM ĐIỂM SINH VIÊN TRONG LỚP
 # ==================================================
@@ -40,7 +38,6 @@ def teacher_view_class_grades(class_id: str):
     """
     # TODO: Lấy danh sách sinh viên và điểm theo class_id
     raise HTTPException(status_code=501, detail="Chưa triển khai nguồn dữ liệu")
-
 
 # =========================
 # XUẤT BẢNG ĐIỂM
