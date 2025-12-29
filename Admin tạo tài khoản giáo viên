@@ -1,4 +1,41 @@
-# Giả lập cơ sở dữ liệu tài khoản
+def admin_create_account():
+    # Xác nhận quyền admin
+    if not verify_admin():
+        print("❌ Không có quyền tạo tài khoản")
+        return
+
+    # Nhập thông tin cơ bản
+    full_name, email, password = input_account_info()
+
+    # Kiểm tra email
+    if is_email_exist(email):
+        print("❌ Email đã tồn tại")
+        return
+
+    # Chọn loại tài khoản
+    role = choose_account_role()
+    if role is None:
+        return
+
+    # Nhập thông tin chi tiết
+    department, temp_password = input_detail_info(role)
+
+    if role == "giang_vien":
+        password = temp_password
+
+    # Tạo tài khoản
+    new_account = build_account(
+        full_name, email, password, role, department
+    )
+
+    accounts_db.append(new_account)
+
+    # Gửi email thông báo
+    send_email(email, role)
+
+    print("✅ Tạo tài khoản thành công!")
+
+#  Giả lập cơ sở dữ liệu tài khoản
 accounts_db = [
     {
         "full_name": "Admin Root",
@@ -57,6 +94,5 @@ def verify_admin():
     return False
 def send_email(email, role):
     print(f"📧 Gửi email thông báo tạo tài khoản {role} thành công tới {email}")
-
 
 
