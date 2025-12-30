@@ -1,0 +1,34 @@
+import json
+import os
+
+KQHT_FILE = "ketquahoctap.json"
+
+def xuat_bang_diem(ma_sinh_vien):
+    if not os.path.exists(KQHT_FILE):
+        return "Không tìm thấy dữ liệu kết quả học tập."
+
+    with open(KQHT_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if ma_sinh_vien not in data:
+        return "Sinh viên không tồn tại."
+
+    thong_tin = data[ma_sinh_vien]
+
+    bang_diem = {
+        "ma_sinh_vien": ma_sinh_vien,
+        "ho_ten": thong_tin.get("ho_ten"),
+        "mon_hoc": []
+    }
+
+    for mon in thong_tin.get("mon_hoc", []):
+        bang_diem["mon_hoc"].append({
+            "ten_mon": mon.get("ten_mon"),
+            "hoc_ky": mon.get("hoc_ky"),
+            "diem": mon.get("diem")
+        })
+
+    if not bang_diem["mon_hoc"]:
+        return "Chưa có dữ liệu bảng điểm."
+
+    return bang_diem

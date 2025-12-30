@@ -1,0 +1,13 @@
+# module5/check_submission.py
+from module1.show_assignments import assignments
+
+def check_submission():
+    try:
+        aid = int(input("Nhập ID bài tập muốn kiểm tra: "))
+        for a in assignments:
+            if a['id'] == aid:
+                print("Bài tập đã có sinh viên nộp." if a['submitted'] else "Chưa có sinh viên nộp.")
+                return
+        print("Không tìm thấy bài tập.")
+    except ValueError:
+        print("ID phải là số.")

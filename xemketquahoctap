@@ -1,0 +1,59 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+import csv
+
+app = FastAPI()
+
+# =========================================
+# SINH VIÊN – XEM ĐIỂM CÁ NHÂN / THEO MÔN
+# =========================================
+@app.get("/student/{student_id}/grades")
+def student_view_grades(student_id: int, semester: str = None):
+    """
+    Sinh viên xem điểm cá nhân, có thể lọc theo học kỳ
+    """
+    # TODO: Lấy danh sách điểm từ CSDL theo student_id
+    # TODO: Nếu có semester thì lọc theo học kỳ
+    raise HTTPException(status_code=501, detail="Chưa triển khai nguồn dữ liệu")
+
+# =========================
+# SINH VIÊN – ĐIỂM TRUNG BÌNH
+# =========================
+@app.get("/student/{student_id}/average")
+def student_average_score(student_id: int):
+    """
+    Tính điểm trung bình của sinh viên
+    """
+    # TODO: Lấy danh sách điểm của sinh viên từ CSDL
+    # TODO: Tính điểm trung bình
+    raise HTTPException(status_code=501, detail="Chưa triển khai nguồn dữ liệu")
+
+# ==================================================
+# GIẢNG VIÊN – XEM ĐIỂM SINH VIÊN TRONG LỚP
+# ==================================================
+@app.get("/teacher/class/{class_id}/grades")
+def teacher_view_class_grades(class_id: str):
+    """
+    Giảng viên xem điểm sinh viên trong lớp
+    """
+    # TODO: Lấy danh sách sinh viên và điểm theo class_id
+    raise HTTPException(status_code=501, detail="Chưa triển khai nguồn dữ liệu")
+
+# =========================
+# XUẤT BẢNG ĐIỂM
+# =========================
+@app.get("/export/grades")
+def export_grades():
+    """
+    Xuất bảng điểm ra file CSV
+    """
+    file_name = "bang_diem.csv"
+
+    # TODO: Lấy dữ liệu điểm từ CSDL
+    # TODO: Ghi dữ liệu ra file CSV
+    with open(file_name, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["MSSV", "Tên sinh viên", "Môn học", "Học kỳ", "Điểm"])
+        # TODO: writer.writerow(...) cho từng bản ghi
+
+    return FileResponse(file_name, filename=file_name)

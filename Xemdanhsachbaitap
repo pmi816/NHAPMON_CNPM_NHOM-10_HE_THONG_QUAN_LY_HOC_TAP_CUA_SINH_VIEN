@@ -1,0 +1,6 @@
+def xem_danh_sach_bai_tap(danh_sach):
+    print("Danh sách bài tập:")
+    for i, bai in enumerate(danh_sach, start=1):
+        print(f"{i}. {bai}")
+ds = ["Bài 1", "Bài 2", "Bài 3"]
+xem_danh_sach_bai_tap(ds)

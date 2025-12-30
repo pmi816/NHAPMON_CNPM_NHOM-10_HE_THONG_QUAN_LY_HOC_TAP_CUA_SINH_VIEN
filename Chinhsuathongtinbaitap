@@ -1,0 +1,16 @@
+# module3/edit_assignment.py
+from module1.show_assignments import assignments
+
+def edit_assignment():
+    try:
+        aid = int(input("Nhập ID bài tập muốn chỉnh sửa: "))
+        for a in assignments:
+            if a['id'] == aid:
+                a['title'] = input("Nhập tên mới: ")
+                a['desc'] = input("Nhập mô tả mới: ")
+                a['deadline'] = input("Nhập deadline mới (YYYY-MM-DD): ")
+                print("Chỉnh sửa thành công.")
+                return
+        print("Không tìm thấy bài tập.")
+    except ValueError:
+        print("ID phải là số.")
