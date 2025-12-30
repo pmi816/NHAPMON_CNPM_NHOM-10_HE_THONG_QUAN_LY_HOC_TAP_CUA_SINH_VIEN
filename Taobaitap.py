@@ -130,4 +130,25 @@ def student_menu():
         else:
             print("❌ Sai lựa chọn")
 
+# ====== CHƯƠNG TRÌNH CHÍNH ======
+def main():
+    while True:
+        print("\n=== US-2.0: TẠO BÀI TẬP ===")
+        print("1. Giảng viên")
+        print("2. Sinh viên")
+        print("0. Thoát")
 
+        role = input("Chọn vai trò: ")
+
+        if role == "1":
+            lecturer_menu()
+        elif role == "2":
+            student_menu()
+        elif role == "0":
+            print("👋 Kết thúc chương trình")
+            break
+        else:
+            print("❌ Sai lựa chọn")
+
+
+main()
